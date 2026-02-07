@@ -1,0 +1,13 @@
+{
+  "name": "frontend-progress-wallpaper",
+  "version": "1.0.0",
+  "description": "Live coding progress wallpaper",
+  "main": "index.html",
+  "scripts": {
+    "dev": "echo 'No dev server needed'",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": ["wallpaper", "pwa", "frontend"],
+  "author": "Your Name",
+  "license": "MIT"
+}
