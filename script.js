@@ -3,24 +3,34 @@ const currentDateEl = document.getElementById('currentDate');
 const currentTimeEl = document.getElementById('currentTime');
 const currentDayEl = document.getElementById('currentDay');
 const percentageEl = document.getElementById('percentage');
-const progressBarFill = document.getElementById('progressBarFill');
-const dotsGrid = document.getElementById('dotsGrid');
+const dotsContainer = document.getElementById('dotsContainer');
 
 // Constants
 const TOTAL_DAYS = 365;
 const DOTS_PER_ROW = 15;
-const TOTAL_ROWS = Math.ceil(TOTAL_DAYS / DOTS_PER_ROW);
 
-// Format date
+// Format date without time
 function formatDate(date) {
-    const options = { weekday: 'long', day: 'numeric', month: 'long' };
-    return date.toLocaleDateString('en-US', options);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    const dayName = days[date.getDay()];
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+    
+    return `${dayName}, ${day} ${monthName}`;
 }
 
-// Format time
+// Format time (24-hour format)
 function formatTime(date) {
-    const options = { hour: '2-digit', minute: '2-digit' };
-    return date.toLocaleTimeString('en-US', options);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    
+    // Add leading zero
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    
+    return `${hours}:${minutes}`;
 }
 
 // Calculate day of year
@@ -48,16 +58,16 @@ function updateDateTime() {
 
 // Create dots grid
 function createDotsGrid() {
-    const currentDay = getDayOfYear(new Date());
+    const now = new Date();
+    const currentDay = getDayOfYear(now);
     const percentage = calculatePercentage(currentDay);
     
     // Update displays
     currentDayEl.textContent = currentDay;
-    percentageEl.textContent = `${percentage}%`;
-    progressBarFill.style.width = `${percentage}%`;
+    percentageEl.textContent = `${percentage}% completed`;
     
     // Clear existing dots
-    dotsGrid.innerHTML = '';
+    dotsContainer.innerHTML = '';
     
     // Create dots
     for (let i = 1; i <= TOTAL_DAYS; i++) {
@@ -65,17 +75,14 @@ function createDotsGrid() {
         dot.classList.add('dot');
         
         if (i < currentDay) {
-            dot.classList.add('past');
+            dot.classList.add('completed');
         } else if (i === currentDay) {
-            dot.classList.add('today');
+            dot.classList.add('current');
         } else {
-            dot.classList.add('future');
+            dot.classList.add('upcoming');
         }
         
-        // Add hover effect
-        dot.title = `Day ${i}${i === currentDay ? ' (Today)' : i < currentDay ? ' (Completed)' : ' (Upcoming)'}`;
-        
-        dotsGrid.appendChild(dot);
+        dotsContainer.appendChild(dot);
     }
 }
 
@@ -84,12 +91,18 @@ function init() {
     updateDateTime();
     createDotsGrid();
     
-    // Update dots every hour (in case someone leaves it open)
-    setInterval(createDotsGrid, 3600000);
+    // Update at midnight to change day
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    const timeToMidnight = midnight - now;
     
-    // Initial update
-    createDotsGrid();
+    // Schedule update for midnight
+    setTimeout(() => {
+        createDotsGrid();
+        // Then update every 24 hours
+        setInterval(createDotsGrid, 86400000);
+    }, timeToMidnight);
 }
 
-// Start when DOM is loaded
+// Start when page loads
 document.addEventListener('DOMContentLoaded', init);
