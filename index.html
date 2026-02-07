@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Progress Wallpaper</title>
+    <meta name="description" content="Live wallpaper showing your coding progress through the year">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="icons/icon-72x72.png">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🚀 Frontend Progress</h1>
+            <div class="date-info">
+                <div id="currentDate" class="current-date">Thursday, 15 January</div>
+                <div id="currentTime" class="current-time">10:10 AM</div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="progress-section">
+                <div class="progress-text">
+                    <span id="currentDay" class="day-number">25</span>
+                    <span class="day-text">of 365 days completed</span>
+                </div>
+                <div class="percentage" id="percentage">50%</div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="bar-fill" id="progressBarFill"></div>
+            </div>
+
+            <div class="dots-grid" id="dotsGrid"></div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot past"></div>
+                    <span>Completed Days</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot today"></div>
+                    <span>Today</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot future"></div>
+                    <span>Upcoming Days</span>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p class="auto-update">⚡ Automatically updates daily</p>
+            <p class="instructions-link">
+                <a href="instructions.html" class="install-link">📱 How to install on home screen</a>
+            </p>
+            <p class="footer-text">
+                Made with ❤️ by <span class="username">@yourusername</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
